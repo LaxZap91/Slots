@@ -122,6 +122,7 @@ class App(ttk.Window):
         
         # multi threads geting the image data ( image path, image type, image date )
         self.imgs = multi_get_img_data(directory)
+        self.imgs = [t for t in self.imgs if t is not None]
         print('Loaded')
         
         # does nothing else if there are not images in the directory
@@ -215,7 +216,9 @@ class App(ttk.Window):
         self.entry_wigits.start_entry.var.set('')
         self.entry_wigits.end_entry.var.set('') 
         self.play_imgs.clear()
-        
+
+        self.entry_wigits.update_table()
+
         # resets the save button to disabled
         self.image_buttons.save_button.configure(state='disabled')
     
@@ -249,7 +252,7 @@ class App(ttk.Window):
         with open(file_path, 'w', newline='') as csvfile:
             writer = csv.writer(csvfile)
             for item in self.machine_values:
-                writer.writerow(item)
+                writer.writerow([item])
 
 class EntryWigits(ttk.Frame):
     def __init__(self, parent):
@@ -494,7 +497,7 @@ class ImageButtons(ttk.Frame):
             return
         
         # gets the path of the image to be deleted
-        path = parent.imgs[parent.pointer]['path']
+        path = parent.imgs[parent.pointer][0]
         # opens a confirmation that you want to delete the image
         confirmation = Messagebox.show_question(f'Are you sure you want to delete this image:\n{path}',
                                                 'Image Deletion Confirmation',
