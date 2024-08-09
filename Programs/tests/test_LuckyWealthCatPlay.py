@@ -95,7 +95,7 @@ class TestLuckyWealthCat(TestPlay):
         img3 = r"d:\this\is\a\path\image3.png"
         play.add_images([img2, img3])
 
-        expected = r"""Lucky_Wealth_Cat-0.60-2024-01-02-03:04:05,ilani,01/02/2024,Lucky Wealth Cat,$600.00,$0.60,AP,1cent,"This; is (a): state",$12.34,-$587.66,"This; is (a): note.",Lucky Buddha/Lucky Wealth Cat,d:\this\is\a\path\simage.png,d:\this\is\a\path\eimage.png,['d:\\this\\is\\a\\path\\image1.png', 'd:\\this\\is\\a\\path\\image2.png', 'd:\\this\\is\\a\\path\\image3.png']"""
+        expected = r"""Lucky_Wealth_Cat-0.60-2024-01-02-03:04:05,ilani,01/02/2024,Lucky Wealth Cat,$600.00,$0.60,AP,1cent,"This; is (a): state",12.34,-$587.66,"This; is (a): note.",Lucky Buddha/Lucky Wealth Cat,d:\this\is\a\path\simage.png,d:\this\is\a\path\eimage.png,['d:\\this\\is\\a\\path\\image1.png', 'd:\\this\\is\\a\\path\\image2.png', 'd:\\this\\is\\a\\path\\image3.png']"""
 
         assert str(play) == expected
 

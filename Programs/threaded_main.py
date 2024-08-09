@@ -299,9 +299,9 @@ class App(ttk.Window):
             self._current_play.denom = self.entry_wigits.denom_cb.var.get()
 
     def update_pnl(self):
-        self.entry_wigits.profit_loss.var.set(
-            f"{(Decimal(self.entry_wigits.cashout.get_var()) - Decimal(self.entry_wigits.cashin.get_var())):.2f}"
-        )
+        if self._current_play is None:
+            return
+        self.entry_wigits.profit_loss.var.set(self._current_play.pnl)
 
     def update_cashin(self, cashin=None):
         if self._current_play is None:
@@ -354,6 +354,7 @@ class App(ttk.Window):
         self._current_play.hand_pays.clear()
         for hp in self.hand_pay:
             self._current_play.add_hand_pay(hp)
+        self.update_pnl()
 
     def load_play(self, playid):
         self._loaded_play_id = playid
@@ -494,23 +495,29 @@ class App(ttk.Window):
 
         pics_to_remove = []
         # move all images and update play values with new location
-        with open(file_path, "a+", newline="") as csvfile:
-            writer = csv.writer(csvfile)
-            for p in list(self.plays.values()):
-                if p.start_image and new_path:
-                    pics_to_remove.append(p.start_image)
-                    p.start_image = move(p.start_image, new_path)
-
-                pics_to_remove.extend(p.addl_images)
-                for i, a in enumerate(p.addl_images):
-                    p.addl_images[i] = move(a, new_path)
-
-                if p.end_image and new_path:
-                    pics_to_remove.append(p.end_image)
-                    p.end_image = move(p.end_image, new_path)
-
-            for row in p.get_csv_rows():
-                writer.writerow(row)
+        try:
+            playId = ""
+            with open(file_path, "a+", newline="") as csvfile:
+                writer = csv.writer(csvfile)
+                for p in list(self.plays.values()):
+                    playId = p.identifier
+                    if p.start_image and new_path:
+                        pics_to_remove.append(p.start_image)
+                        p.start_image = move(p.start_image, new_path)
+    
+                    pics_to_remove.extend(p.addl_images)
+                    for i, a in enumerate(p.addl_images):
+                        p.addl_images[i] = move(a, new_path)
+    
+                    if p.end_image and new_path:
+                        pics_to_remove.append(p.end_image)
+                        p.end_image = move(p.end_image, new_path)
+    
+                for row in p.get_csv_rows():
+                    writer.writerow(row)
+        except Exception as e:
+            Messagebox.show_error(f'Error saving session at {playId}. Aborting. You will need to manually fix up a few things to continue.\n{e}', 'Error Saving')
+            return
 
         self.imgs = [d for d in self.imgs if (d[0] not in pics_to_remove)]
         self.imgs = sorted(self.imgs, key=lambda item: item[2])

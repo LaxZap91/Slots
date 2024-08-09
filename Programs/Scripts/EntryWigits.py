@@ -135,6 +135,7 @@ class EntryWigits(ttk.Frame):
         self.hp_table.delete(*self.hp_table.get_children())
         for item in parent.hand_pay:
             self.hp_table.insert(parent='', index=ttk.END, values=(item.pay_amount, item.tip_amount))
+        parent.update_handpays()
     
     def _hp_delete(self, _):
         for item in self.hp_table.selection():

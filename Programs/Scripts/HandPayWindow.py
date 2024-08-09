@@ -13,13 +13,17 @@ class HandPayWindow(tk.Toplevel):
         super().__init__(*args, **kwargs)
         self.callback=callback
         self.handpay = None
-        self.title('Handpay')
+        self.title('Handpay/Ticket Out')
         self.minsize(300, 300)
         self.iconphoto(False, ttk.PhotoImage(file=r'Programs\Icon\slot_machine_icon.png'))
-        self.handpay = MoneyEntryLabel(self, 'Hand Pay amount')
+        self.handpay = MoneyEntryLabel(self, 'Money Received')
         self.handpay.pack()
         self.tip = MoneyEntryLabel(self, 'Tip amount')
         self.tip.pack()
+
+        self.taxable = tk.BooleanVar(value=True)
+        self.taxable_btn = ttk.Checkbutton(self, text="Taxable", onvalue=True, offvalue=False, variable=self.taxable)
+        self.taxable_btn.pack()
 
         self.okay_button = ttk.Button(
             self,
@@ -36,7 +40,7 @@ class HandPayWindow(tk.Toplevel):
         self.focus()
 
     def button_okay_pressed(self):
-        hp = HandPay(Decimal(self.handpay.var.get()), Decimal(self.tip.var.get()))
+        hp = HandPay(Decimal(self.handpay.var.get()), Decimal(self.tip.var.get()), taxable=self.taxable.get())
         self.callback(hp)
         self.destroy()
 

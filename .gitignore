@@ -8,11 +8,6 @@ __pycache__/
 # C extensions
 *.so
 
-# images
-*.HEIC
-*.MOV
-*.png
-
 .vscode/
 .coverage
 .idea/

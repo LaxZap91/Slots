@@ -7,13 +7,24 @@ import datetime
 import pathlib
 from ttkbootstrap import StringVar
 
+def d(str):
+    TWOPLACES = Decimal(10)**-2
+    return Decimal(str).quantize(TWOPLACES)
+
 @dataclass
-class HandPay:
+class HandPay():
     pay_amount: Decimal
     tip_amount: Decimal
     image: str = None
     addl_images: list[str] = field(default_factory=list)
+    taxable: bool = True
 
+    @property
+    def tax(self):
+        tax = "0.00"
+        if (self.taxable):
+            tax = d(d(0.27) * self.pay_amount)
+        return tax
 
 @dataclass(repr=False, eq=False, kw_only=True)
 class Play:
@@ -60,13 +71,24 @@ class Play:
 
     @property
     def pnl(self) -> Decimal:
-        return self.cash_out - self.cash_in
+        hps = sum(hp.pay_amount for hp in self.hand_pays)
+        return self.cash_out + hps - self.cash_in
 
     def add_cash(self, cash: Decimal) -> None:
         if (len(self._cash_in) == 1 and self._cash_in[0] == Decimal(0)):
             self._cash_in[0] = cash
         else:
             self._cash_in.append(cash)
+
+    def cash_out_str(self):
+        rv = ""
+        if len(self.hand_pays):
+            rv = "="
+            hps = "+".join(str(hp.pay_amount) for hp in self.hand_pays)
+            rv += hps
+            rv += "+"
+        rv += str(self.cash_out)
+        return rv
     
     def add_image(self, img: pathlib.Path) -> None:
         if img not in self.addl_images:
@@ -95,12 +117,14 @@ class Play:
         start_date = self.start_time.strftime(r"%m/%d/%Y")
         images = [str(pathlib.PureWindowsPath(f)) for f in self.addl_images]
         
-        rows = [(self.session_date.strftime(r"%m/%d/%Y"), self.casino, self.start_time, self.machine.get_name(), format_currency(self.cash_in, 'USD', locale='en_US'), format_currency(self.bet, 'USD', locale='en_US'), self.play_type, self.denom, self.state, format_currency(self.cash_out, 'USD', locale='en_US'), format_currency(self.pnl, 'USD', locale='en_US'), self.note, self.machine.get_family(), self.start_image, self.end_image, images, self.end_time)]
+        rows = [(self.session_date.strftime(r"%m/%d/%Y"), self.casino, self.start_time, self.machine.get_name(), format_currency(self.cash_in, 'USD', locale='en_US'), format_currency(self.bet, 'USD', locale='en_US'), self.play_type, self.denom, self.state, self.cash_out_str(), format_currency(self.pnl, 'USD', locale='en_US'), self.note, self.machine.get_family(), self.start_image, self.end_image, images, self.end_time)]
         for hp in self.hand_pays:
-            tax = Decimal(Decimal(0.27) * hp.pay_amount)
-            images = hp.addl_images if hp.addl_images else ""
-            rows.append((self.session_date.strftime(r"%m/%d/%Y"), self.casino, start_date, self.machine.get_name(), format_currency(tax, 'USD', locale='en_US'),"","Tax Consequence", self.denom, format_currency(hp.pay_amount, 'USD', locale="en_US"),"",format_currency(-1*tax, 'USD', locale='en_US'),format_currency(tax, 'USD', locale='en_US'), self.machine.get_family(), hp.image,"",images,""))
-            rows.append((self.session_date.strftime(r"%m/%d/%Y"), self.casino, start_date, self.machine.get_name(), format_currency(hp.tip_amount, 'USD', locale='en_US'),"","Tip","","",format_currency(0.00, 'USD', locale='en_US'), format_currency(-1*hp.tip_amount, 'USD', locale='en_US'),"",self.machine.get_family(),"","","",""))
+            if hp.tax > 0:
+                tax =  format_currency(hp.tax, 'USD', locale='en_US')
+                images = hp.addl_images if hp.addl_images else ""
+                rows.append((self.session_date.strftime(r"%m/%d/%Y"), self.casino, start_date, self.machine.get_name(), tax,"","Tax Consequence", self.denom, format_currency(hp.pay_amount, 'USD', locale="en_US"),"", -1*tax, tax, self.machine.get_family(), hp.image,"",images,""))
+            if hp.tip_amount > 0:
+                rows.append((self.session_date.strftime(r"%m/%d/%Y"), self.casino, start_date, self.machine.get_name(), format_currency(hp.tip_amount, 'USD', locale='en_US'),"","Tip","","",format_currency(0.00, 'USD', locale='en_US'), format_currency(-1*hp.tip_amount, 'USD', locale='en_US'),"",self.machine.get_family(),"","","",""))
         return rows
 
     def __str__(self):
@@ -110,10 +134,12 @@ class Play:
             start_date = "??"
         images = [str(pathlib.PureWindowsPath(f)) for f in self.addl_images]
         
-        outstr = f"{self.identifier},{self.casino},{start_date},{self.machine.get_name()},{format_currency(self.cash_in, 'USD', locale='en_US')},{format_currency(self.bet, 'USD', locale='en_US')},{self.play_type},{self.denom},\"{self.state}\",{format_currency(self.cash_out, 'USD', locale='en_US')},{format_currency(self.pnl, 'USD', locale='en_US')},\"{self.note}\",{self.machine.get_family()},{self.start_image},{self.end_image},{images}"
+        outstr = f"{self.identifier},{self.casino},{start_date},{self.machine.get_name()},{format_currency(self.cash_in, 'USD', locale='en_US')},{format_currency(self.bet, 'USD', locale='en_US')},{self.play_type},{self.denom},\"{self.state}\",{self.cash_out_str()},{format_currency(self.pnl, 'USD', locale='en_US')},\"{self.note}\",{self.machine.get_family()},{self.start_image},{self.end_image},{images}"
         for hp in self.hand_pays:
-            tax = Decimal(Decimal(0.27) * hp.pay_amount)
-            images = hp.addl_images if hp.addl_images else ""
-            outstr += f"\n{self.identifier},{self.casino},{start_date},{self.machine.get_name()},{format_currency(tax, 'USD', locale='en_US')},,Tax Consequence,{self.denom},{format_currency(hp.pay_amount, 'USD', locale="en_US")},,{format_currency(-1*tax, 'USD', locale='en_US')},{format_currency(tax, 'USD', locale='en_US')},{self.machine.get_family()},{hp.image},,{images}"
-            outstr += f"\n{self.identifier},{self.casino},{start_date},{self.machine.get_name()},{format_currency(hp.tip_amount, 'USD', locale='en_US')},,Tip,,,{format_currency(0.00, 'USD', locale='en_US')},{format_currency(-1*hp.tip_amount, 'USD', locale='en_US')},,{self.machine.get_family()},,,"
+            if hp.tax > 0:
+                tax =  format_currency(hp.tax, 'USD', locale='en_US')
+                images = hp.addl_images if hp.addl_images else ""
+                outstr += f"\n{self.identifier},{self.casino},{start_date},{self.machine.get_name()},{tax},,Tax Consequence,{self.denom},{format_currency(hp.pay_amount, 'USD', locale="en_US")},,-{tax},{tax},{self.machine.get_family()},{hp.image},,{images}"
+            if hp.tip_amount > 0:
+                outstr += f"\n{self.identifier},{self.casino},{start_date},{self.machine.get_name()},{format_currency(hp.tip_amount, 'USD', locale='en_US')},,Tip,,,{format_currency(0.00, 'USD', locale='en_US')},{format_currency(-1*hp.tip_amount, 'USD', locale='en_US')},,{self.machine.get_family()},,,"
         return outstr
