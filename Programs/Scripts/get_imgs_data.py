@@ -33,8 +33,6 @@ def get_img_data(file, directory):
     file_type = file_path[file_path.find('.'):].upper()
     if (file_type == '.HEIC' or file_type == '.JPEG' or file_type == '.JPG' or file_type == '.PNG') and isfile(file_path):
         return [file_path, file_type, get_time(file_path)]
-    else:
-        pass
 
 def multi_get_img_data(directory):
     files = listdir(directory)
