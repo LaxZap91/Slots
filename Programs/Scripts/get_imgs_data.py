@@ -5,7 +5,7 @@ from PIL import Image, ExifTags
 
 from datetime import datetime
 
-from threading import Thread
+from multiprocessing import Pool
 
 def get_time(path):
     with Image.open(path) as image:
@@ -32,21 +32,10 @@ def get_img_data(file, directory):
         pass
 
 def multi_get_img_data(directory):
-    files = listdir(directory)
+    files = ((file, directory) for file in listdir(directory))
     
-    threads = []
-    results = []
-    
-    def get_data_thread(file):
-        results.append(get_img_data(file, directory))
-    
-    for file in files:
-        thread = Thread(target=get_data_thread, args=(file,), daemon=True)
-        threads.append(thread)
-        thread.start()
-    
-    for thread in threads:
-        thread.join()
+    pool = Pool(5)
+    results = pool.starmap(get_img_data, files, 5)
     
     return results
 
