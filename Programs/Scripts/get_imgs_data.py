@@ -6,6 +6,7 @@ from PIL import Image, ExifTags
 from datetime import datetime
 
 from multiprocessing import Pool
+from itertools import repeat
 
 def get_time(path):
     with Image.open(path) as image:
@@ -32,10 +33,10 @@ def get_img_data(file, directory):
         pass
 
 def multi_get_img_data(directory):
-    files = ((file, directory) for file in listdir(directory))
+    files = listdir(directory)
     
     pool = Pool(5)
-    results = pool.starmap(get_img_data, files, 5)
+    results = pool.starmap(get_img_data, zip(files, repeat(directory)), 5)
     
     return results
 
