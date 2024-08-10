@@ -12,8 +12,12 @@ def get_time(path):
     with Image.open(path) as image:
         try:
             image_exif = image._getexif()
-            exif = { ExifTags.TAGS[k]: v for k, v in image_exif.items() if k in ExifTags.TAGS and type(v) is not bytes }
-            date_obj = datetime.strptime(exif['DateTimeOriginal'], r'%Y:%m:%d %H:%M:%S').strftime(r'%Y%m%d%H%M%S')
+            
+            exif = tuple(v for k, v in image_exif.items() if ExifTags.TAGS[k] == 'DateTimeOriginal')[0]
+            #exif = { ExifTags.TAGS[k]: v for k, v in image_exif.items() if k in ExifTags.TAGS and type(v) is not bytes }
+            
+            date_obj = datetime.strptime(exif, r'%Y:%m:%d %H:%M:%S').strftime(r'%Y%m%d%H%M%S')
+            #date_obj = datetime.strptime(exif['DateTimeOriginal'], r'%Y:%m:%d %H:%M:%S').strftime(r'%Y%m%d%H%M%S')
             return date_obj
         except (KeyError, AttributeError):
             try:
