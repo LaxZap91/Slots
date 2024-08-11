@@ -5,7 +5,7 @@ from PIL import Image, ExifTags
 
 from datetime import datetime
 
-from multiprocessing import Pool
+from multiprocessing import Pool, cpu_count
 from itertools import repeat
 
 def get_time(path):
@@ -37,10 +37,12 @@ def get_img_data(file, directory):
 def multi_get_img_data(directory):
     files = listdir(directory)
     
-    pool = Pool(5)
-    results = pool.starmap(get_img_data, zip(files, repeat(directory)), 5)
+    pool = Pool(cpu_count()-2)
+    results = list(pool.starmap(get_img_data, zip(files, repeat(directory)))) #change chunk size
     
     return results
 
 def no_threading_get_img_data(directory):
     return tuple(get_img_data(file, directory) for file in listdir(directory))
+
+
