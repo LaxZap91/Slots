@@ -38,7 +38,8 @@ def multi_get_img_data(directory):
     files = listdir(directory)
     
     pool = Pool(cpu_count()-2)
-    results = list(pool.starmap(get_img_data, zip(files, repeat(directory)))) #change chunk size
+    chunks = (len(files) / cpu_count()-2) / 20
+    results = list(pool.starmap(get_img_data, zip(files, repeat(directory)), chunks))
     
     return results
 
