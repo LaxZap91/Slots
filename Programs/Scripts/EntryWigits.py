@@ -5,6 +5,7 @@ from Scripts.LabelPairs.EntryLabel import EntryLabel
 from Scripts.LabelPairs.MoneyEntryLabel import MoneyEntryLabel
 from Scripts.LabelPairs.LabelLabel import LabelLabel
 from Scripts.LabelPairs.LargeEntryLabel import LargeEntryLabel
+from Scripts.LabelPairs.DateEntryLabel import DateEntryLabel
 
 from Slots.Play import HandPay
 from decimal import Decimal
@@ -58,8 +59,8 @@ class EntryWigits(ttk.Frame):
         self._window.create_play(machine)
 
     def _create_date(self):
-        self.dt = EntryLabel(self, 'Date')
-        self.dt.var.set(self._window.default_dt)
+        self.dt = DateEntryLabel(self, 'Start Time', dateformat=r'%Y-%m-%d %H:%M:%S')
+        #self.dt.var.set(self._window.default_dt)
     
     def _create_play_type(self):
          self.play_type = ComboboxLabel(self, 'Play Type', self._window.play_types)

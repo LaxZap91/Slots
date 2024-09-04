@@ -47,7 +47,7 @@ class App(ttk.Window):
 
         self.title("Slot Data Entry")
         self.minsize(450, 705)
-        self.geometry("1300x800")
+        self.geometry("1450x1000")
         self.iconphoto(
             False, ttk.PhotoImage(file=r"Programs\Icon\slot_machine_icon.png")
         )
