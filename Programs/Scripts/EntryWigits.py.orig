@@ -64,8 +64,9 @@ class EntryWigits(ttk.Frame):
         self._window.create_play(machine)
 
     def _create_date(self):
-        self.dt = DateEntryLabel(self, 'Start Time', dateformat=r'%Y-%m-%d %H:%M:%S')
-        #self.dt.var.set(self._window.default_dt)
+<<<<<<< HEAD
+        self.dt = EntryLabel(self, 'Date')
+        self.dt.var.set(self._window.default_dt)
 
     def play_start_datetime_is_valid(self):
         return self.dt.var.get() != "" and self.dt.var.get() != self._window.default_dt
@@ -85,6 +86,11 @@ class EntryWigits(ttk.Frame):
     def clear_play_start_datetime(self):
         self.dt.var.set("")
 
+=======
+        self.dt = DateEntryLabel(self, 'Start Time', dateformat=r'%Y-%m-%d %H:%M:%S')
+        #self.dt.var.set(self._window.default_dt)
+    
+>>>>>>> upstream/main
     def _create_play_type(self):
         self.play_type = ComboboxLabel(self, 'Play Type', self._window.play_types)
         self.play_type.var.set("AP")

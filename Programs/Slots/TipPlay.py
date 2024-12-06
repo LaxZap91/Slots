@@ -1,19 +1,18 @@
 from dataclasses import dataclass, field
+
+from babel.numbers import format_currency
+
 from Programs.Slots.Machine import Machine
 from Programs.Slots.Play import Play
-from babel.numbers import format_currency 
-from typing import Optional
-from decimal import Decimal
-import datetime
-import pathlib
+
 
 @dataclass(repr=False, eq=False)
 class TipPlay(Play):
-    machine: Machine = field(default = Machine('Tip', 'Non-AP'), init = False)
-    play_type: str =field(default = 'Tip', init = False)
-    _start_image: str =field(default = None, init = False)
-    _addl_images: list[str] = field(default = None, init = False)
-    _end_image: str =field(default =  None, init = False)
+    machine: Machine = field(default=Machine('Tip', 'Non-AP'), init=False)
+    play_type: str = field(default='Tip', init=False)
+    _start_image: str = field(default=None, init=False)
+    _addl_images: list[str] = field(default=None, init=False)
+    _end_image: str = field(default=None, init=False)
 
     def __str__(self):
         start_date = self.start_time.strftime(r"%m/%d/%Y")

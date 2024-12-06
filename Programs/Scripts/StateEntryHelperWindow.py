@@ -1,11 +1,9 @@
-import ttkbootstrap as ttk
-
-
 import tkinter as tk
+
+import ttkbootstrap as ttk
 
 from Scripts.LabelPairs.EntryLabel import EntryLabel
 from Slots.Play import Play
-from decimal import Decimal
 
 
 class StateEntryHelperWindow(tk.Toplevel):
@@ -21,9 +19,9 @@ class StateEntryHelperWindow(tk.Toplevel):
 
         self.entries = []
         for f in self.fields:
-            l = EntryLabel(self, f.label, callback=f.callback)
-            self.entries.append(l)
-            l.pack()
+            lbl = EntryLabel(self, f.label, callback=f.callback)
+            self.entries.append(lbl)
+            lbl.pack()
 
         self.okay_button = ttk.Button(
             self,

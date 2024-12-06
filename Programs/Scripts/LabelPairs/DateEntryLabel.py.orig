@@ -3,7 +3,19 @@ from ttkbootstrap.widgets import DateEntry
 
 
 class DateEntryLabel(ttk.Frame):
+<<<<<<< HEAD
+    def __init__(self, parent, label_text='', dateformat=r'%d-%m-%Y'):
+        super().__init__(master=parent)
+        self.label = ttk.Label(self, text=label_text)
+        self.label.pack(side='left')
+
+        self.var = ttk.StringVar()
+        self.date_entry = DateEntry(self, dateformat=dateformat)
+        self.date_entry.entry.configure(textvariable=self.var)
+        self.date_entry.pack(side='right')
+=======
     def __init__(self, parent, label_text='', entry_var=None, state='normal', callback=None, dateformat=r'%Y-%m-%d'):
+        
         super().__init__(master=parent)
         if entry_var is None:
             self.var = ttk.StringVar()
@@ -12,7 +24,7 @@ class DateEntryLabel(ttk.Frame):
         
         self.label = ttk.Label(self, text=label_text)
         self.label.grid(row=0, column=0, sticky='w')
-
+        
         self.date_entry = DateEntry(self, dateformat=dateformat)
         self.date_entry.entry.configure(textvariable=self.var, state=state)
         self.date_entry.grid(row=0, column=1, sticky='e')
@@ -21,3 +33,4 @@ class DateEntryLabel(ttk.Frame):
     
     def execute(self):
         self.callback(self.var.get())
+>>>>>>> upstream/main

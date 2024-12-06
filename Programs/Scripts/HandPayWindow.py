@@ -1,6 +1,5 @@
 import ttkbootstrap as ttk
 
-
 import tkinter as tk
 from Slots.Play import HandPay
 
@@ -11,7 +10,7 @@ from decimal import Decimal
 class HandPayWindow(tk.Toplevel):
     def __init__(self, *args, callback=None, **kwargs):
         super().__init__(*args, **kwargs)
-        self.callback=callback
+        self.callback = callback
         self.handpay = None
         self.title('Handpay/Ticket Out')
         self.minsize(300, 300)

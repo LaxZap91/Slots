@@ -1,24 +1,23 @@
-from os import makedirs
-from os.path import join, dirname, join, exists
-
-import ttkbootstrap as ttk
-from ttkbootstrap.dialogs import Querybox, Messagebox
-from tkinter.filedialog import askdirectory
-
-from collections import namedtuple
-from shutil import move
-from PIL import Image, ImageTk
-from pillow_heif import register_heif_opener
-from decimal import Decimal
 import csv
 import datetime
+from collections import namedtuple
+from decimal import Decimal
+from os import makedirs
+from os.path import dirname, join, exists
+from shutil import move
+from tkinter.filedialog import askdirectory
 
-from Scripts.get_imgs_data import no_threading_get_img_data
-from Scripts.ImageDisplay import ImageDisplay
-from Scripts.ImageButtons import ImageButtons
+import ttkbootstrap as ttk
+from PIL import Image, ImageTk
+from pillow_heif import register_heif_opener
+from ttkbootstrap.dialogs import Querybox, Messagebox
+
 from Scripts.EntryWigits import EntryWigits
-from Scripts.SessionTable import SessionTable
+from Scripts.ImageButtons import ImageButtons
+from Scripts.ImageDisplay import ImageDisplay
 from Scripts.SessionFrame import SessionFrame
+from Scripts.SessionTable import SessionTable
+from Scripts.get_imgs_data import no_threading_get_img_data
 from Slots.PlayFactory import PlayFactory
 
 register_heif_opener(decode_threads=8, thumbnails=False)
@@ -228,7 +227,7 @@ class App(ttk.Window):
             image = image.rotate(self.rotation, expand=1)
 
             global imagetk
-            # turns the image into a image that tkinter can display
+            # turns the image into an image that tkinter can display
             imagetk = ImageTk.PhotoImage(image)
 
             # gets the image dimensions and divides them by 2
@@ -250,7 +249,7 @@ class App(ttk.Window):
                 self.session_date.get(), fmt
             )
 
-    def update_casino(self, casino=None):
+    def update_casino(self, _=None):
         if self._current_play is None:
             return
         if self.session_frame.casino.var.get():

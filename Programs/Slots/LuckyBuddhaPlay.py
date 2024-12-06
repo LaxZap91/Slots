@@ -1,8 +1,8 @@
 from dataclasses import dataclass, field
-import json
-from .EntryField import EntryField
+
 from .Machine import Machine
 from .StateHelperPlay import StateHelperPlay
+
 
 @dataclass(repr=False, eq=False)
 class LuckyBuddhaPlay(StateHelperPlay):

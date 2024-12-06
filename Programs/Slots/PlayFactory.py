@@ -3,7 +3,7 @@ from .LuckyBuddhaPlay import LuckyBuddhaPlay
 from .PowerPushPlay import PowerPushPlay
 from .PinwheelPrizesPlay import PinwheelPrizesPlay
 from .FrankensteinPlay import FrankensteinPlay
-from .UltraRushGoldPlay import UltraRushGoldPlay 
+from .UltraRushGoldPlay import UltraRushGoldPlay
 from .RichLittlePiggiesPlay import RichLittlePiggiesPlay, RichLittlePiggiesHogWildPlay, RichLittlePiggiesMealTicketPlay
 from .Machine import Machine
 from .Play import Play
@@ -29,8 +29,7 @@ class PlayFactory:
         "Rich Little Piggies Meal Ticket (Bingo)": RichLittlePiggiesMealTicketPlay,
         "Ultra Rush Gold": UltraRushGoldPlay,
         "Ultra Rush Gold (Bingo)": UltraRushGoldPlay}
-        
-    
+
     @staticmethod
     def get_play(machine_name: str) -> Play:
         if machine_name in PlayFactory.play_for_machine:

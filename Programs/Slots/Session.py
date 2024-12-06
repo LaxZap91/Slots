@@ -1,7 +1,7 @@
 import datetime
-import locale
 
 from babel.numbers import format_currency
+
 from Programs.Slots.Play import Play
 
 casinos = ['ilani', 'Spirit Mountain']
@@ -18,10 +18,12 @@ class Session:
         self.start = start_time
 
     def get_pnl(self) -> float:
-        return sum([p.get_pnl() for p in self.plays])
+        return sum([p.pnl for p in self.plays])
 
     def add_play(self, play, check_consistency=True) -> tuple[int, str]:
-        if len(self.plays) > 0 and format_currency(self.plays[-1].get_cash_out(), locale='en_US') != format_currency(play.get_initial_cash_in(), locale='en_US'):
+        warning = ""
+        if (len(self.plays) > 0 and format_currency(self.plays[-1].cash_out_str(), "USD", locale='en_US') !=
+                format_currency(play.get_initial_cash_in(), "USD", locale='en_US')):
             warning = "This play starts with a different amount than the previous play\n"
 
         if check_consistency and warning != "":
@@ -29,4 +31,3 @@ class Session:
 
         self.plays.append(play)
         return 0, warning
-    

@@ -3,7 +3,7 @@ Use at your own risk
 
 # Prerequisites
 * Python 3.12 or newer must be installed
-* This program- you can get this by selecting the code button above and download zip
+* This program: you can get this by selecting the code button above and download zip
 * Extract this to a known location
   
 # Getting started (do this once the first time you use the program)
@@ -20,7 +20,7 @@ Use at your own risk
 
 # Using the program
 1. File->Open Folder
-   * This can take a while. I had 6000 files and it took 25 minutes to load on my system
+   * This can take a while. I had 6000 files. It took 25 minutes to load on my system
    * If the images are not correctly sized you can use File->Set Scale to change the scale. I use 7. Bigger numbers will make the image smaller.
 2. Select the casino for this session. If it is not in the list, you can use File->Add Casino to add it to the list
 3. Use Prev/Next buttons to navigate to the first picture that is part of the play
@@ -48,7 +48,7 @@ Use at your own risk
 # Known bugs/limitations
 * Once you save you cannot open a folder
 * Removing an image does not enable the button to allow it to be added, you must navigate away and then back if you want to readd it.
-* Add denom does not add a new denomination to the drop down (but it will add it to the file)
+* Add denom does not add a new denomination to the drop-down (but it will add it to the file)
 * Tax rate is set to 27% and is not currently configurable.
 * Using the state helper does not update the state display. You must click into and then out of the Initial State box to see it
 * You cannot reload/edit plays once it's been saved
